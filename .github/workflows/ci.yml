@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+
     steps:
       - uses: actions/checkout@v4
 
@@ -20,13 +23,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Install SDK components
         run: |
-          sdkmanager "platforms;android-34"
-          sdkmanager "build-tools;34.0.0"
+          yes | ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
       - name: Cache Gradle
         uses: actions/cache@v4
