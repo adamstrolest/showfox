@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "ShowFox Cursor",
+  "version": "1.0.0",
+  "description": "Applies the KDE Breeze cursor to web pages.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "showfox-cursor@showfox.browser"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "css": ["cursor.css"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ]
+}

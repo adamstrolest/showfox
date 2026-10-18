@@ -2,6 +2,7 @@ package com.showfox.browser.extensions
 
 import android.content.Context
 import android.util.Log
+import com.showfox.browser.engine.GeckoPrefs
 import org.mozilla.geckoview.GeckoResult
 import org.mozilla.geckoview.GeckoRuntime
 import org.mozilla.geckoview.WebExtension
@@ -14,9 +15,25 @@ class ExtensionManager(private val context: Context) {
         private const val TAG = "ExtensionManager"
         private const val UBO_ID = "uBlock0@raymondhill.net"
         private const val UBO_XPI_ASSET = "ublock_origin-1.67.xpi"
+        private const val CURSOR_EXTENSION_URI = "resource://android/assets/extensions/showfox-cursor/"
+        private const val CURSOR_EXTENSION_ID = "showfox-cursor@showfox.browser"
     }
 
     var onUboStatusChanged: ((Boolean, String?) -> Unit)? = null
+
+    fun installCursorExtension(runtime: GeckoRuntime) {
+        if (!GeckoPrefs.isCustomCursorEnabled(context)) {
+            Log.i(TAG, "Custom cursor disabled; skipping cursor extension")
+            return
+        }
+        runtime.webExtensionController
+            .ensureBuiltIn(CURSOR_EXTENSION_URI, CURSOR_EXTENSION_ID)
+            .accept({ extension ->
+                Log.i(TAG, "Cursor extension ready: ${extension?.metaData?.name}")
+            }, { e ->
+                Log.e(TAG, "Failed to install cursor extension", e)
+            })
+    }
 
     fun installUbo(runtime: GeckoRuntime) {
         val promptDelegate = UboPromptDelegate()

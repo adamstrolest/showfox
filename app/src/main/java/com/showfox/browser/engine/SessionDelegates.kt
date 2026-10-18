@@ -29,7 +29,6 @@ class SessionContentDelegate(private val manager: GeckoSessionManager) : GeckoSe
 
     override fun onFirstContentfulPaint(session: GeckoSession) {
         Log.d(TAG, "First contentful paint")
-        CursorInjector.inject(session, manager.context)
     }
 
     override fun onPaintStatusReset(session: GeckoSession) {
@@ -48,7 +47,6 @@ class SessionProgressDelegate(private val manager: GeckoSessionManager) : GeckoS
 
     override fun onPageStop(session: GeckoSession, success: Boolean) {
         Log.d(TAG, "Page stop, success: $success")
-        CursorInjector.inject(session, manager.context)
     }
 
     override fun onProgressChange(session: GeckoSession, progress: Int) {

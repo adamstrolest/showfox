@@ -1,0 +1,13 @@
+* {
+  cursor: url('breeze.cur') 2 1, auto !important;
+}
+
+a,
+button,
+[role="button"],
+input,
+select,
+label,
+[tabindex] {
+  cursor: url('breeze.cur') 2 1, pointer !important;
+}

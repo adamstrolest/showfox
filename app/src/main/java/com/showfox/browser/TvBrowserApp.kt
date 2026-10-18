@@ -29,6 +29,7 @@ class TvBrowserApp : Application() {
             if (runtime != null) {
                 Log.d(TAG, "GeckoRuntime ready")
                 extensionManager.installUbo(runtime)
+                extensionManager.installCursorExtension(runtime)
                 UboUpdater.schedule(this)
             }
         }, { e ->
