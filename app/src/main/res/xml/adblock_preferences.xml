@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/ad_blocking">
+        <SwitchPreferenceCompat
+            android:key="ubo_enabled"
+            android:title="uBlock Origin"
+            android:summary="Enable uBlock Origin extension for advanced ad blocking"
+            android:defaultValue="true" />
+
+        <Preference
+            android:key="ubo_filter_lists"
+            android:title="Filter Lists"
+            android:summary="Manage uBlock Origin filter lists" />
+
+        <Preference
+            android:key="ubo_whitelist"
+            android:title="Whitelist"
+            android:summary="Sites where uBlock Origin is disabled" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

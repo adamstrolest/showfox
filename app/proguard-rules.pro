@@ -1,0 +1,5 @@
+-keep class org.mozilla.geckoview.** { *; }
+-keep class org.mozilla.components.** { *; }
+-dontwarn org.mozilla.geckoview.**
+-dontwarn org.mozilla.components.**
+-keep class androidx.media3.** { *; }

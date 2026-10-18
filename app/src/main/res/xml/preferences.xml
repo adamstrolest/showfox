@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="@string/privacy">
+        <SwitchPreferenceCompat
+            android:key="drm_enabled"
+            android:title="Enable DRM (Widevine)"
+            android:summary="Allows playback of protected content (Netflix, Prime Video, etc.)"
+            android:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            android:key="private_mode"
+            android:title="Private Browsing"
+            android:summary="Do not save history or cookies"
+            android:defaultValue="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Appearance">
+        <SwitchPreferenceCompat
+            android:key="custom_cursor"
+            android:title="Custom Cursor"
+            android:summary="Use KDE Breeze style cursor on web pages"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Data">
+        <Preference
+            android:key="clear_history"
+            android:title="Clear History"
+            android:summary="Remove all browsing history" />
+
+        <Preference
+            android:key="clear_bookmarks"
+            android:title="Clear Bookmarks"
+            android:summary="Remove all bookmarks" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="About">
+        <Preference
+            android:key="about"
+            android:title="About ShowFox"
+            android:summary="Version 1.0.0" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
