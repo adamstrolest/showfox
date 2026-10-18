@@ -25,7 +25,7 @@ jobs:
       - name: Install SDK components
         run: |
           yes | ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0"
+          ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager "platforms;android-37.2" "build-tools;36.0.0" "build-tools;37.0.0"
 
       - name: Decode keystore
         run: |

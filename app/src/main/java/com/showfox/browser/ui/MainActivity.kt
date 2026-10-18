@@ -10,6 +10,7 @@ import com.showfox.browser.R
 import com.showfox.browser.engine.GeckoSessionManager
 import com.showfox.browser.ui.browser.BrowserFragment
 import com.showfox.browser.ui.newtab.NewTabFragment
+import com.showfox.browser.voice.VoiceSearchManager
 
 class MainActivity : AppCompatActivity() {
 

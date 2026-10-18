@@ -2,22 +2,22 @@ package com.showfox.browser.engine
 
 import android.util.Log
 import org.mozilla.geckoview.ContentBlocking
-import org.mozilla.geckoview.GeckoRuntime
+import org.mozilla.geckoview.GeckoRuntimeSettings
 
 object ContentBlocker {
 
     private const val TAG = "ContentBlocker"
 
-    fun applyTo(builder: GeckoRuntime.Settings.Builder) {
+    fun applyTo(builder: GeckoRuntimeSettings.Builder) {
         builder.contentBlocking(
             ContentBlocking.Settings.Builder()
                 .antiTracking(ContentBlocking.AntiTracking.STRICT)
-                .safeBrowsing(ContentBlocking.SafeBrowsing.ALL)
+                .safeBrowsing(ContentBlocking.SafeBrowsing.DEFAULT)
                 .cookieBehavior(ContentBlocking.CookieBehavior.ACCEPT_NON_TRACKERS)
                 .cookieBehaviorPrivateMode(ContentBlocking.CookieBehavior.ACCEPT_NON_TRACKERS)
                 .queryParameterStrippingEnabled(true)
                 .queryParameterStrippingPrivateBrowsingEnabled(true)
-                .emailTrackingProtectionEnabled(true)
+                .emailTrackerBlockingPrivateMode(true)
                 .strictSocialTrackingProtection(true)
         )
         Log.d(TAG, "ContentBlocking configured: STRICT anti-tracking, all safe browsing")

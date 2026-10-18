@@ -12,8 +12,8 @@ import android.widget.FrameLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import com.showfox.browser.R
-import com.showfox.browser.engine.GeckoSession
 import com.showfox.browser.ui.MainActivity
+import org.mozilla.geckoview.GeckoSession
 import org.mozilla.geckoview.GeckoView
 
 class BrowserFragment : Fragment() {

@@ -1,6 +1,7 @@
 package com.showfox.browser.extensions
 
 import android.util.Log
+import org.mozilla.geckoview.AllowOrDeny
 import org.mozilla.geckoview.GeckoResult
 import org.mozilla.geckoview.WebExtension
 import org.mozilla.geckoview.WebExtensionController
@@ -12,43 +13,46 @@ class UboPromptDelegate : WebExtensionController.PromptDelegate {
         private const val UBO_NAME = "uBlock Origin"
     }
 
+    private fun shouldAutoApprove(extension: WebExtension): Boolean =
+        extension.metaData.name == UBO_NAME
+
     override fun onInstallPromptRequest(
         extension: WebExtension,
         permissions: Array<String>,
-        origins: Array<String>
+        origins: Array<String>,
+        dataCollectionPermissions: Array<String>
     ): GeckoResult<WebExtension.PermissionPromptResponse> {
-        if (extension.metaData.name == UBO_NAME) {
-            Log.i(TAG, "Auto-approving uBO permissions: ${permissions.joinToString()}")
-            return GeckoResult.fromValue(
-                WebExtension.PermissionPromptResponse(
-                    granted = true,
-                    grantedPermissions = true,
-                    grantedOrigins = true
-                )
-            )
-        }
+        val auto = shouldAutoApprove(extension)
+        Log.i(TAG, "Install prompt for ${extension.metaData.name}: auto=$auto, " +
+            "perms=${permissions.size}, origins=${origins.size}")
         return GeckoResult.fromValue(
             WebExtension.PermissionPromptResponse(
-                granted = false,
-                grantedPermissions = false,
-                grantedOrigins = false
+                isPermissionsGranted = auto,
+                isPrivateModeGranted = auto,
+                isTechnicalAndInteractionDataGranted = false
             )
         )
     }
 
-    override fun onUpdatePromptRequest(
-        extension: WebExtension,
-        permissions: Array<String>,
-        origins: Array<String>
-    ): GeckoResult<WebExtension.PermissionPromptResponse> {
-        return onInstallPromptRequest(extension, permissions, origins)
+    override fun onUpdatePrompt(
+        currentlyInstalled: WebExtension,
+        updatedExtension: WebExtension,
+        newPermissions: Array<String>,
+        newOrigins: Array<String>
+    ): GeckoResult<AllowOrDeny> {
+        val auto = shouldAutoApprove(updatedExtension)
+        Log.i(TAG, "Update prompt for ${updatedExtension.metaData.name}: auto=$auto")
+        return GeckoResult.fromValue(if (auto) AllowOrDeny.ALLOW else AllowOrDeny.DENY)
     }
 
-    override fun onOptionalPromptRequest(
+    override fun onOptionalPrompt(
         extension: WebExtension,
         permissions: Array<String>,
-        origins: Array<String>
-    ): GeckoResult<WebExtension.PermissionPromptResponse> {
-        return onInstallPromptRequest(extension, permissions, origins)
+        origins: Array<String>,
+        dataCollectionPermissions: Array<String>
+    ): GeckoResult<AllowOrDeny> {
+        val auto = shouldAutoApprove(extension)
+        Log.i(TAG, "Optional prompt for ${extension.metaData.name}: auto=$auto")
+        return GeckoResult.fromValue(if (auto) AllowOrDeny.ALLOW else AllowOrDeny.DENY)
     }
 }

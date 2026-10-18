@@ -1,9 +1,9 @@
 package com.showfox.browser.engine
 
 import android.util.Log
+import org.mozilla.geckoview.AllowOrDeny
 import org.mozilla.geckoview.GeckoResult
 import org.mozilla.geckoview.GeckoSession
-import org.mozilla.geckoview.WebResponse
 
 class SessionContentDelegate(private val manager: GeckoSessionManager) : GeckoSession.ContentDelegate {
 
@@ -29,7 +29,7 @@ class SessionContentDelegate(private val manager: GeckoSessionManager) : GeckoSe
 
     override fun onFirstContentfulPaint(session: GeckoSession) {
         Log.d(TAG, "First contentful paint")
-        CursorInjector.inject(session)
+        CursorInjector.inject(session, manager.context)
     }
 
     override fun onPaintStatusReset(session: GeckoSession) {
@@ -48,7 +48,7 @@ class SessionProgressDelegate(private val manager: GeckoSessionManager) : GeckoS
 
     override fun onPageStop(session: GeckoSession, success: Boolean) {
         Log.d(TAG, "Page stop, success: $success")
-        CursorInjector.inject(session)
+        CursorInjector.inject(session, manager.context)
     }
 
     override fun onProgressChange(session: GeckoSession, progress: Int) {
@@ -58,7 +58,7 @@ class SessionProgressDelegate(private val manager: GeckoSessionManager) : GeckoS
 
     override fun onSecurityChange(
         session: GeckoSession,
-        security: GeckoSession.SecurityInformation
+        security: GeckoSession.ProgressDelegate.SecurityInformation
     ) {
         Log.d(TAG, "Security: ${security.isSecure}")
         manager.onSecurityChanged?.invoke(session, security)
@@ -80,36 +80,44 @@ class SessionNavigationDelegate(private val manager: GeckoSessionManager) : Geck
     override fun onLoadRequest(
         session: GeckoSession,
         request: GeckoSession.NavigationDelegate.LoadRequest
-    ): GeckoResult<WebResponse>? {
+    ): GeckoResult<AllowOrDeny>? {
         Log.d(TAG, "Load request: ${request.uri}")
         return null
     }
 
-    override fun onLocationChange(session: GeckoSession, url: String?) {
-        Log.d(TAG, "Location change: $url")
-        manager.onUrlChanged?.invoke(session, url)
+    override fun onLocationChange(
+        session: GeckoSession,
+        uri: String?,
+        permList: Array<out String>,
+        hasUserGesture: Boolean
+    ) {
+        Log.d(TAG, "Location change: $uri")
+        manager.onUrlChanged?.invoke(session, uri)
     }
 }
 
 class SessionPromptDelegate : GeckoSession.PromptDelegate {
+
+    private val TAG = "SessionPromptDelegate"
+
     override fun onAlertPrompt(
         session: GeckoSession,
         prompt: GeckoSession.PromptDelegate.AlertPrompt
-    ): GeckoResult<PromptResponse> {
+    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
         return GeckoResult.fromValue(prompt.dismiss())
     }
 
     override fun onButtonPrompt(
         session: GeckoSession,
         prompt: GeckoSession.PromptDelegate.ButtonPrompt
-    ): GeckoResult<PromptResponse> {
+    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
         return GeckoResult.fromValue(prompt.dismiss())
     }
 
     override fun onTextPrompt(
         session: GeckoSession,
         prompt: GeckoSession.PromptDelegate.TextPrompt
-    ): GeckoResult<PromptResponse> {
+    ): GeckoResult<GeckoSession.PromptDelegate.PromptResponse>? {
         return GeckoResult.fromValue(prompt.dismiss())
     }
 }

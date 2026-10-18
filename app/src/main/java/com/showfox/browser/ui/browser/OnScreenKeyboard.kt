@@ -26,7 +26,7 @@ class OnScreenKeyboard @JvmOverloads constructor(
         buildKeyboard()
     }
 
-    private fun buildKeyboard {
+    private fun buildKeyboard() {
         val rows = listOf(
             "1234567890",
             "AZERTYUIOP",

@@ -4,11 +4,12 @@ import android.content.Context
 import android.util.Log
 import org.mozilla.geckoview.GeckoResult
 import org.mozilla.geckoview.GeckoRuntime
+import org.mozilla.geckoview.GeckoRuntimeSettings
 import org.mozilla.geckoview.GeckoSession
 import org.mozilla.geckoview.GeckoView
 import java.lang.ref.WeakReference
 
-class GeckoSessionManager(private val context: Context) {
+class GeckoSessionManager(val context: Context) {
 
     companion object {
         private const val TAG = "GeckoSessionManager"
@@ -27,22 +28,20 @@ class GeckoSessionManager(private val context: Context) {
     var onUrlChanged: ((GeckoSession, String?) -> Unit)? = null
     var onGoBackChanged: ((GeckoSession, Boolean) -> Unit)? = null
     var onGoForwardChanged: ((GeckoSession, Boolean) -> Unit)? = null
-    var onSecurityChanged: ((GeckoSession, GeckoSession.SecurityInformation) -> Unit)? = null
+    var onSecurityChanged: ((GeckoSession, GeckoSession.ProgressDelegate.SecurityInformation) -> Unit)? = null
 
     fun initialize(): GeckoResult<GeckoRuntime> {
-        if (runtime != null) {
-            return GeckoResult.fromValue(runtime)
-        }
+        runtime?.let { return GeckoResult.fromValue(it) }
 
-        val builder = GeckoRuntime.Settings.Builder()
+        val builder = GeckoRuntimeSettings.Builder()
             .configFilePath(context.filesDir.resolve("gecko").absolutePath)
-            .javaEnabled(true)
+            .javaScriptEnabled(true)
         ContentBlocker.applyTo(builder)
 
-        return GeckoRuntime.create(context, builder.build()).also {
-            runtime = it
-            Log.d(TAG, "GeckoRuntime initialized")
-        }
+        val created = GeckoRuntime.create(context, builder.build())
+        runtime = created
+        Log.d(TAG, "GeckoRuntime initialized")
+        return GeckoResult.fromValue(created)
     }
 
     fun createSession(): GeckoSession {
