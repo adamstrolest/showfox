@@ -31,7 +31,7 @@ class OnScreenKeyboard @JvmOverloads constructor(
             "1234567890",
             "AZERTYUIOP",
             "QSDFGHJKLM",
-            "WXCVBN .,/?:@")
+            "WXCVBN .,/?:@"
         )
 
         for (row in rows) {

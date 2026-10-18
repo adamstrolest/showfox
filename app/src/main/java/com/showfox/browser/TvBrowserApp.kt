@@ -26,9 +26,11 @@ class TvBrowserApp : Application() {
         extensionManager = ExtensionManager(this)
 
         sessionManager.initialize().accept({ runtime ->
-            Log.d(TAG, "GeckoRuntime ready")
-            extensionManager.installUbo(runtime)
-            UboUpdater.schedule(this)
+            if (runtime != null) {
+                Log.d(TAG, "GeckoRuntime ready")
+                extensionManager.installUbo(runtime)
+                UboUpdater.schedule(this)
+            }
         }, { e ->
             Log.e(TAG, "Failed to initialize GeckoRuntime", e)
         })

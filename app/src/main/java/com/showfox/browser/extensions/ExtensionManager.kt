@@ -39,7 +39,7 @@ class ExtensionManager(private val context: Context) {
             }
         }, { e ->
             Log.e(TAG, "Failed to install uBO", e)
-            onUboStatusChanged?.invoke(false, e.message)
+            onUboStatusChanged?.invoke(false, e?.message ?: "Unknown error")
         })
     }
 

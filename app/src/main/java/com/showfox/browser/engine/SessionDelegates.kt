@@ -70,10 +70,12 @@ class SessionNavigationDelegate(private val manager: GeckoSessionManager) : Geck
     private val TAG = "SessionNavigationDelegate"
 
     override fun onCanGoBack(session: GeckoSession, canGoBack: Boolean) {
+        manager.setCanGoBack(session, canGoBack)
         manager.onGoBackChanged?.invoke(session, canGoBack)
     }
 
     override fun onCanGoForward(session: GeckoSession, canGoForward: Boolean) {
+        manager.setCanGoForward(session, canGoForward)
         manager.onGoForwardChanged?.invoke(session, canGoForward)
     }
 
@@ -88,7 +90,7 @@ class SessionNavigationDelegate(private val manager: GeckoSessionManager) : Geck
     override fun onLocationChange(
         session: GeckoSession,
         uri: String?,
-        permList: Array<out String>,
+        permList: List<GeckoSession.PermissionDelegate.ContentPermission>,
         hasUserGesture: Boolean
     ) {
         Log.d(TAG, "Location change: $uri")

@@ -114,7 +114,9 @@ class BrowserFragment : Fragment() {
         }
     }
 
-    fun canGoBack(): Boolean = session?.canGoBack ?: false
+    fun canGoBack(): Boolean = session?.let {
+        (requireActivity() as MainActivity).sessionManager.canGoBack(it)
+    } ?: false
 
     fun goBack() {
         session?.let { sess ->
@@ -132,9 +134,10 @@ class BrowserFragment : Fragment() {
     }
 
     fun updateNavigationState() {
+        val manager = (requireActivity() as MainActivity).sessionManager
         topBarView?.updateNavigationState(
-            canGoBack = canGoBack(),
-            canGoForward = session?.canGoForward ?: false
+            canGoBack = session?.let { manager.canGoBack(it) } ?: false,
+            canGoForward = session?.let { manager.canGoForward(it) } ?: false
         )
     }
 

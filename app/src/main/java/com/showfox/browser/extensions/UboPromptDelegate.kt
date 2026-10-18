@@ -26,22 +26,18 @@ class UboPromptDelegate : WebExtensionController.PromptDelegate {
         Log.i(TAG, "Install prompt for ${extension.metaData.name}: auto=$auto, " +
             "perms=${permissions.size}, origins=${origins.size}")
         return GeckoResult.fromValue(
-            WebExtension.PermissionPromptResponse(
-                isPermissionsGranted = auto,
-                isPrivateModeGranted = auto,
-                isTechnicalAndInteractionDataGranted = false
-            )
+            WebExtension.PermissionPromptResponse(auto, auto, false)
         )
     }
 
     override fun onUpdatePrompt(
-        currentlyInstalled: WebExtension,
-        updatedExtension: WebExtension,
+        extension: WebExtension,
         newPermissions: Array<String>,
-        newOrigins: Array<String>
-    ): GeckoResult<AllowOrDeny> {
-        val auto = shouldAutoApprove(updatedExtension)
-        Log.i(TAG, "Update prompt for ${updatedExtension.metaData.name}: auto=$auto")
+        newOrigins: Array<String>,
+        dataCollectionPermissions: Array<String>
+    ): GeckoResult<AllowOrDeny>? {
+        val auto = shouldAutoApprove(extension)
+        Log.i(TAG, "Update prompt for ${extension.metaData.name}: auto=$auto")
         return GeckoResult.fromValue(if (auto) AllowOrDeny.ALLOW else AllowOrDeny.DENY)
     }
 

@@ -22,6 +22,8 @@ class GeckoSessionManager(val context: Context) {
     private val sessions = mutableListOf<GeckoSession>()
     private val viewPool = mutableListOf<WeakReference<GeckoView>>()
     private var activeSession: GeckoSession? = null
+    private val canGoBackState = mutableMapOf<GeckoSession, Boolean>()
+    private val canGoForwardState = mutableMapOf<GeckoSession, Boolean>()
 
     var onProgressChanged: ((GeckoSession, Int) -> Unit)? = null
     var onTitleChanged: ((GeckoSession, String?) -> Unit)? = null
@@ -71,6 +73,8 @@ class GeckoSessionManager(val context: Context) {
     fun closeSession(session: GeckoSession) {
         session.close()
         sessions.remove(session)
+        canGoBackState.remove(session)
+        canGoForwardState.remove(session)
         if (activeSession == session) {
             activeSession = sessions.lastOrNull()
         }
@@ -96,8 +100,20 @@ class GeckoSessionManager(val context: Context) {
     }
 
     fun releaseView(view: GeckoView) {
-        view.setSession(null)
+        view.releaseSession()
     }
+
+    fun setCanGoBack(session: GeckoSession, canGoBack: Boolean) {
+        canGoBackState[session] = canGoBack
+    }
+
+    fun setCanGoForward(session: GeckoSession, canGoForward: Boolean) {
+        canGoForwardState[session] = canGoForward
+    }
+
+    fun canGoBack(session: GeckoSession): Boolean = canGoBackState[session] ?: false
+
+    fun canGoForward(session: GeckoSession): Boolean = canGoForwardState[session] ?: false
 
     fun loadUrl(session: GeckoSession, url: String) {
         session.loadUri(url)
@@ -105,7 +121,7 @@ class GeckoSessionManager(val context: Context) {
     }
 
     fun goBack(session: GeckoSession): Boolean {
-        if (session.canGoBack) {
+        if (canGoBack(session)) {
             session.goBack()
             return true
         }
@@ -113,7 +129,7 @@ class GeckoSessionManager(val context: Context) {
     }
 
     fun goForward(session: GeckoSession): Boolean {
-        if (session.canGoForward) {
+        if (canGoForward(session)) {
             session.goForward()
             return true
         }

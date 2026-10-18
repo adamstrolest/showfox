@@ -19,6 +19,7 @@ object ContentBlocker {
                 .queryParameterStrippingPrivateBrowsingEnabled(true)
                 .emailTrackerBlockingPrivateMode(true)
                 .strictSocialTrackingProtection(true)
+                .build()
         )
         Log.d(TAG, "ContentBlocking configured: STRICT anti-tracking, all safe browsing")
     }
