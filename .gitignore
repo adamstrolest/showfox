@@ -11,3 +11,8 @@
 *.aab
 *.keystore
 !debug.keystore
+
+*.keystore
+*.jks
+*.p12
+release.keystore
