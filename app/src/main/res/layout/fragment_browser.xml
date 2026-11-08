@@ -15,4 +15,11 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
+    <com.showfox.browser.ui.browser.OnScreenKeyboard
+        android:id="@+id/on_screen_keyboard"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_gravity="bottom"
+        android:visibility="gone" />
+
 </FrameLayout>

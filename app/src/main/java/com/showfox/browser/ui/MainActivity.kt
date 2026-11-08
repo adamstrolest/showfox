@@ -86,6 +86,9 @@ class MainActivity : AppCompatActivity() {
             }
             KeyEvent.KEYCODE_BACK -> {
                 val fragment = supportFragmentManager.findFragmentById(R.id.container)
+                if (fragment is OnScreenKeyboardHost && fragment.hideOnScreenKeyboard()) {
+                    return true
+                }
                 if (fragment is BrowserFragment && fragment.canGoBack()) {
                     fragment.goBack()
                     return true

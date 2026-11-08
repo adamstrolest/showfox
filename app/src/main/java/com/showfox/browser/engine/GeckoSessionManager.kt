@@ -13,7 +13,7 @@ class GeckoSessionManager(val context: Context) {
 
     companion object {
         private const val TAG = "GeckoSessionManager"
-        private const val MAX_TABS = 5
+        private const val MAX_TABS = 2
     }
 
     var runtime: GeckoRuntime? = null

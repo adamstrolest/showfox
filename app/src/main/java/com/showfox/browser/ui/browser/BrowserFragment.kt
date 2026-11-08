@@ -13,10 +13,11 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import com.showfox.browser.R
 import com.showfox.browser.ui.MainActivity
+import com.showfox.browser.ui.OnScreenKeyboardHost
 import org.mozilla.geckoview.GeckoSession
 import org.mozilla.geckoview.GeckoView
 
-class BrowserFragment : Fragment() {
+class BrowserFragment : Fragment(), OnScreenKeyboardHost {
 
     companion object {
         private const val TAG = "BrowserFragment"
@@ -34,6 +35,7 @@ class BrowserFragment : Fragment() {
     private var session: GeckoSession? = null
     private var topBarView: TopBar? = null
     private var isTopBarShown = false
+    private var keyboard: OnScreenKeyboard? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +64,11 @@ class BrowserFragment : Fragment() {
         }
 
         setupTopBar()
+
+        val keyboard = view.findViewById<OnScreenKeyboard>(R.id.on_screen_keyboard)
+        this.keyboard = keyboard
+        val urlBar = view.findViewById<EditText>(R.id.url_bar)
+        keyboard.bind(urlBar) { navigate(urlBar.text.toString()) }
     }
 
     private fun setupTopBar() {
@@ -94,6 +101,19 @@ class BrowserFragment : Fragment() {
     fun setTopBarVisible(visible: Boolean) {
         isTopBarShown = visible
         topBarView?.visibility = if (visible) View.VISIBLE else View.GONE
+        if (!visible) {
+            keyboard?.visibility = View.GONE
+        }
+    }
+
+    override fun hideOnScreenKeyboard(): Boolean {
+        val kb = keyboard ?: return false
+        return if (kb.visibility == View.VISIBLE) {
+            kb.visibility = View.GONE
+            true
+        } else {
+            false
+        }
     }
 
     fun navigate(url: String) {
