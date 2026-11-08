@@ -31,7 +31,6 @@
             android:inputType="textUri"
             android:maxLines="1"
             android:paddingHorizontal="24dp"
-            android:showSoftInputOnFocus="false"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_secondary"
             android:textSize="20sp" />
