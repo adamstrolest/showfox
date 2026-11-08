@@ -31,7 +31,9 @@ jobs:
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
-          path: ~/.gradle/caches
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
@@ -39,7 +41,13 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: |
+          for attempt in 1 2 3; do
+            ./gradlew assembleDebug --stacktrace && exit 0
+            echo "Attempt $attempt failed; retrying in 15s..."
+            sleep 15
+          done
+          exit 1
 
       - name: Run lint
         run: ./gradlew lintDebug || true
@@ -75,7 +83,9 @@ jobs:
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
-          path: ~/.gradle/caches
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: ${{ runner.os }}-gradle-
 
@@ -83,7 +93,13 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build unsigned release APK (R8/minify check)
-        run: ./gradlew assembleRelease --stacktrace
+        run: |
+          for attempt in 1 2 3; do
+            ./gradlew assembleRelease --stacktrace && exit 0
+            echo "Attempt $attempt failed; retrying in 15s..."
+            sleep 15
+          done
+          exit 1
 
       - name: Upload release artifact
         uses: actions/upload-artifact@v4
