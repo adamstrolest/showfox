@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.showfox.browser.R
+import com.showfox.browser.TvBrowserApp
 import com.showfox.browser.engine.GeckoSessionManager
 import com.showfox.browser.ui.browser.BrowserFragment
 import com.showfox.browser.ui.newtab.NewTabFragment
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sessionManager = GeckoSessionManager(applicationContext)
+        sessionManager = (application as TvBrowserApp).sessionManager
         sessionManager.onUrlChanged = { _, url -> currentUrl = url }
         sessionManager.onGoBackChanged = { _, _ -> updateBackState() }
 
